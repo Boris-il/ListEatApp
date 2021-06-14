@@ -1,0 +1,104 @@
+import React, { useReducer } from "react";
+import createDataContext from "./createDataContext";
+/*
+  For each additional type of resource, we will create another Context variable, Provider component and Reducer.
+*/
+
+/*
+  When we return some info from RecipeReducer it will cause the RecipeProvider to re-render, like the useState did.
+*/
+const RecipeReducer = (state, action) => {
+  switch (action.type) {
+    case "add_recipe":
+
+    case "get_recipe":
+
+    case "get_all_recipes":
+
+    case "delete_recipe":
+
+    case "edit_recipe":
+
+    default:
+      return state;
+  }
+};
+
+const addRecipe = (dispatch) => {
+  //TODO:
+};
+
+const getRecipe = (dispatch) => {
+  //TODO:
+};
+
+const getAllRecipes = (dispatch) => {
+  //TODO:
+};
+
+const deleteRecipe = (dispatch) => {
+  //TODO:
+};
+
+const editRecipe = (dispatch) => {
+  //TODO:
+};
+
+// boilerplate of API CRUD method
+/*
+const addBlogPost = (dispatch) => {
+  return async (title, content, callback) => {
+    try{
+      await axios.post('cawcawawc', title, content);
+    dispatch({
+      type: "add_blogpost",
+      payload: { title: title, content: content },
+    });
+    callback();
+  } catch (e) {
+
+  }
+  };
+};
+
+*/
+
+export const { Context, Provider } = createDataContext(
+  RecipeReducer,
+  { addRecipe, getRecipe, getAllRecipes, deleteRecipe, editRecipe },
+  [
+    {
+      url: "test url",
+      ingredients: [
+        { name: "סוכר", amount: "3", measurement: "כוס" },
+        {
+          name: "סודה לשתייה",
+          amount: "1",
+          measurement: "כפית",
+        },
+      ],
+      id: 1,
+      name: "עוגיות שוקולד ציפס",
+      insertion_time: "2021-06-14",
+      image_url:
+        "https://img.mako.co.il/2021/03/31/flourless_brownie_cookies_autoOrient_i.jpg",
+    },
+
+    {
+      url: "test url2",
+      ingredients: [
+        { name: "סוכר", amount: "4", measurement: "כוס" },
+        {
+          name: "סודה לשתייה",
+          amount: "12",
+          measurement: "כפית",
+        },
+      ],
+      id: 2,
+      name: "פיצה חושרמוטה",
+      insertion_time: "2021-06-14",
+      image_url:
+        "https://img.mako.co.il/2021/06/07/pan_pizza1_re_autoOrient_i.jpg",
+    },
+  ]
+);
