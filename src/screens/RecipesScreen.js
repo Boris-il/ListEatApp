@@ -12,7 +12,7 @@ import { Context as RecipeContext } from "../context/RecipeContext";
 import SearchBar from "../components/SearchBar";
 import RecipeDetails from "../components/RecipeDetails";
 
-const RecipesScreen = ({ results, navigation }) => {
+const RecipesScreen = ({ navigation }) => {
   const [term, setTerm] = useState("");
   const { state, addRecipe, getRecipe, getAllRecipes, deleteRecipe } =
     useContext(RecipeContext);
@@ -21,19 +21,21 @@ const RecipesScreen = ({ results, navigation }) => {
     <View>
       <SearchBar
         term={term}
+        type="חיפוש מתכון"
         onTermChange={(newTerm) => setTerm(newTerm)}
+        //TODO: Search recipe by user-given name
         onTermSubmit={() => {}}
       />
       <FlatList
-        horizontal
+        vertical
         showsVerticalScrollIndicator={false}
         data={state}
         keyExtractor={(recipe) => recipe.id}
         renderItem={({ item }) => {
           return (
             <TouchableOpacity
-            //TODO:
-            //onPress={() => navigation.navigate("ShowResult", { id: item.id })}
+              //TODO: Navigate to screen with the engredients
+              onPress={() => navigation.navigate("RecipeInfo", { id: item.id })}
             >
               <RecipeDetails result={item} />
             </TouchableOpacity>

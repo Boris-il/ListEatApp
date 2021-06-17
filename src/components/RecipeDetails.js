@@ -18,16 +18,17 @@ const RecipeDetails = ({ result }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginLeft: 15,
+    alignItems: "center",
+    marginBottom: 20,
   },
   image: {
-    width: 250,
-    height: 120,
-    borderRadius: 4,
+    width: 300,
+    height: 170,
+    borderRadius: 6,
     marginBottom: 5,
   },
   name: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "bold",
   },
 });

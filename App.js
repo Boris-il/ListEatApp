@@ -17,6 +17,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import { Provider as RecipeProvider } from "./src/context/RecipeContext";
 import RecipesScreen from "./src/screens/RecipesScreen";
 import ShoppingScreen from "./src/screens/ShoppingScreen";
+import RecipeInfoScreen from "./src/screens/RecipeInfoScreen";
 
 // StackNavigator is an object that decides what to show on the screen at any given time
 const navigator = createStackNavigator(
@@ -24,6 +25,7 @@ const navigator = createStackNavigator(
     Index: IndexScreen,
     Recipes: RecipesScreen,
     Shopping: ShoppingScreen,
+    RecipeInfo: RecipeInfoScreen,
   },
   {
     // initial is the home screen
