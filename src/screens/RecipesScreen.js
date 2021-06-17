@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { ListItem, Icon, CheckBox } from "react-native-elements";
 import {
   Text,
   StyleSheet,
@@ -7,37 +6,58 @@ import {
   FlatList,
   Button,
   TouchableOpacity,
+  Alert,
 } from "react-native";
+import ActionButton from "react-native-action-button";
+
 import { Context as RecipeContext } from "../context/RecipeContext";
 import SearchBar from "../components/SearchBar";
 import RecipeDetails from "../components/RecipeDetails";
 
-const RecipesScreen = ({ results, navigation }) => {
+const RecipesScreen = ({ navigation }) => {
   const [term, setTerm] = useState("");
   const { state, addRecipe, getRecipe, getAllRecipes, deleteRecipe } =
     useContext(RecipeContext);
+
+  const handleAddRecipe = () => {
+    Alert.alert("", "new recipe");
+    //TODO: Open an overlay for recipe url insertion and call addRecipe()
+  };
 
   return (
     <View>
       <SearchBar
         term={term}
+        type="חיפוש מתכון"
         onTermChange={(newTerm) => setTerm(newTerm)}
+        //TODO: Search recipe by user-given name
         onTermSubmit={() => {}}
       />
       <FlatList
-        horizontal
+        vertical
         showsVerticalScrollIndicator={false}
         data={state}
         keyExtractor={(recipe) => recipe.id}
         renderItem={({ item }) => {
           return (
             <TouchableOpacity
-            //TODO:
-            //onPress={() => navigation.navigate("ShowResult", { id: item.id })}
+              //TODO: Navigate to screen with the ingredients
+              onPress={() => navigation.navigate("RecipeInfo", { id: item.id })}
             >
               <RecipeDetails result={item} />
             </TouchableOpacity>
           );
+        }}
+      />
+      <ActionButton
+        style={styles.actionButton}
+        size={75}
+        offsetY={0}
+        offsetX={20}
+        position="left"
+        buttonColor="rgba(231,76,60,1)"
+        onPress={() => {
+          handleAddRecipe();
         }}
       />
     </View>
@@ -53,6 +73,9 @@ const styles = StyleSheet.create({
   },
   container: {
     marginBottom: 10,
+  },
+  actionButton: {
+    marginBottom: -40,
   },
 });
 
