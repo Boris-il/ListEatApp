@@ -16,6 +16,7 @@ const RecipeReducer = (state, action) => {
     case "get_all_recipes":
 
     case "delete_recipe":
+      console.log("deleting recipe id: " + action.payload);
 
     case "edit_recipe":
 
@@ -37,7 +38,9 @@ const getAllRecipes = (dispatch) => {
 };
 
 const deleteRecipe = (dispatch) => {
-  //TODO:
+  return (id) => {
+    dispatch({ type: "delete_recipe", payload: id });
+  };
 };
 
 const editRecipe = (dispatch) => {

@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
+
 import SwipeGesture from "../swipe-gestures/swipe-gesture";
 
 // remember: each time we pass props from the father, we need to 'catch' it in the component's param.
