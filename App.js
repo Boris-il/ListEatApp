@@ -18,6 +18,7 @@ import { Provider as RecipeProvider } from "./src/context/RecipeContext";
 import RecipesScreen from "./src/screens/RecipesScreen";
 import ShoppingScreen from "./src/screens/ShoppingScreen";
 import RecipeInfoScreen from "./src/screens/RecipeInfoScreen";
+import TestConnectionScreen from "./src/screens/TestConnectionScreen";
 
 // StackNavigator is an object that decides what to show on the screen at any given time
 const navigator = createStackNavigator(
@@ -26,6 +27,7 @@ const navigator = createStackNavigator(
     Recipes: RecipesScreen,
     Shopping: ShoppingScreen,
     RecipeInfo: RecipeInfoScreen,
+    Test: TestConnectionScreen,
   },
   {
     // initial is the home screen
