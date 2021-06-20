@@ -1,21 +1,21 @@
 import React, { useState } from "react";
-import { ListItem, Icon, CheckBox, ThemeProvider } from "react-native-elements";
-import { Text, StyleSheet, View, Button, TouchableOpacity } from "react-native";
-import { Context as RecipeContext } from "../context/RecipeContext";
+import { Text, StyleSheet, View } from "react-native";
+import { Context as RecipeContext } from "../context/Recipe/RecipeContext";
 import SearchBar from "../components/SearchBar";
 
 const ShoppingScreen = () => {
   const [term, setTerm] = useState("");
 
   return (
-    <ThemeProvider>
-      <View>
-        <SearchBar
-          term={term}
-          onTermChange={(newTerm) => setTerm(newTerm)}
-          onTermSubmit={() => {}}
-        />
-        {/*list.map((item, i) => (
+    <View>
+      <SearchBar
+        term={term}
+        onTermChange={(newTerm) => setTerm(newTerm)}
+        onTermSubmit={() => {
+          //TODO: Search ingredient
+        }}
+      />
+      {/*list.map((item, i) => (
           <ListItem key={i} bottomDivider>
             <ListItem.Chevron style={styles.icon} />
             <ListItem.Content>
@@ -23,8 +23,7 @@ const ShoppingScreen = () => {
             </ListItem.Content>
           </ListItem>
         ))*/}
-      </View>
-    </ThemeProvider>
+    </View>
   );
 };
 

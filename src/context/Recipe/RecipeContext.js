@@ -1,5 +1,7 @@
 import React, { useReducer } from "react";
-import createDataContext from "./createDataContext";
+import recAPI from "../../api/recipesAPI";
+
+import createDataContext from "../createDataContext";
 /*
   For each additional type of resource, we will create another Context variable, Provider component and Reducer.
 */
@@ -13,10 +15,11 @@ const RecipeReducer = (state, action) => {
 
     case "get_recipe":
 
-    case "get_all_recipes":
+    case "update_all_recipes":
+      return action.payload.recipes;
 
     case "delete_recipe":
-      console.log("deleting recipe id: " + action.payload);
+    //console.log("deleting recipe id: " + action.payload);
 
     case "edit_recipe":
 
@@ -34,7 +37,24 @@ const getRecipe = (dispatch) => {
 };
 
 const getAllRecipes = (dispatch) => {
-  //TODO:
+  return async (userId, callback) => {
+    try {
+      // get recipes from server
+      const response = await recAPI
+        .get(`/get-all/${userId}`)
+        .then((response) => response.data);
+      // update recipes context
+      dispatch({
+        type: "update_all_recipes",
+        payload: { recipes: response },
+      });
+      if (callback) {
+        callback();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 };
 
 const deleteRecipe = (dispatch) => {
@@ -69,7 +89,8 @@ const addBlogPost = (dispatch) => {
 export const { Context, Provider } = createDataContext(
   RecipeReducer,
   { addRecipe, getRecipe, getAllRecipes, deleteRecipe, editRecipe },
-  [
+  []
+  /*[
     {
       url: "test url",
       ingredients: [
@@ -104,4 +125,5 @@ export const { Context, Provider } = createDataContext(
         "https://img.mako.co.il/2021/06/07/pan_pizza1_re_autoOrient_i.jpg",
     },
   ]
+  */
 );
