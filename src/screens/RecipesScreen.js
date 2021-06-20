@@ -8,12 +8,14 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { Overlay } from "react-native-elements";
 import axios from "axios";
 import ActionButton from "react-native-action-button";
 import recAPI from "../api/recipesAPI";
 import { Context as RecipeContext } from "../context/Recipe/RecipeContext";
 import SearchBar from "../components/SearchBar";
 import RecipeDetails from "../components/RecipeDetails";
+import { VisibilityRounded } from "@material-ui/icons";
 
 const RecipesScreen = ({ navigation }) => {
   // state for search bar query
@@ -29,6 +31,12 @@ const RecipesScreen = ({ navigation }) => {
   let isRendered = useRef(false);
   // loaded
   const [loaded, setLoaded] = useState(false);
+  // overlay
+  const [visible, setVisible] = useState(false);
+
+  const toggleOverlay = () => {
+    setVisible(!visible);
+  };
 
   const done = () => {
     setLoaded(true);
@@ -87,41 +95,41 @@ const RecipesScreen = ({ navigation }) => {
         onTermSubmit={() => {}}
       />
       {loaded ? (
-        <FlatList
-          vertical
-          showsVerticalScrollIndicator={false}
-          data={state}
-          keyExtractor={(recipe) => recipe.id}
-          renderItem={({ item }) => {
-            return (
-              <TouchableOpacity
-                //TODO: Navigate to screen with the ingredients
-                onPress={() =>
-                  navigation.navigate("RecipeInfo", { id: item.id })
-                }
-              >
-                <Text>{item.id}</Text>
-              </TouchableOpacity>
-            );
-          }}
-        />
+        <View>
+          <FlatList
+            vertical
+            showsVerticalScrollIndicator={false}
+            data={state}
+            keyExtractor={(recipe) => recipe.id}
+            renderItem={({ item }) => {
+              return (
+                <TouchableOpacity
+                  //TODO: Navigate to screen with the ingredients
+                  onPress={() =>
+                    navigation.navigate("RecipeInfo", { id: item.id })
+                  }
+                >
+                  <Text>{item.id}</Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+          <Button title="add new recipe" onPress={toggleOverlay} />
+          <Overlay
+            isVisible={visible}
+            onBackdropPress={toggleOverlay}
+            overlayStyle={styles.overlay}
+          >
+            <Text>sup</Text>
+          </Overlay>
+        </View>
       ) : null}
     </View>
   );
 };
 
 /**
- * <ActionButton
-        style={styles.actionButton}
-        size={75}
-        offsetY={0}
-        offsetX={20}
-        position="left"
-        buttonColor="rgba(231,76,60,1)"
-        onPress={() => {
-          handleAddRecipe();
-        }}
-      />
+ *
  */
 
 const styles = StyleSheet.create({
@@ -136,6 +144,17 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     marginBottom: -40,
+  },
+  overlay: {
+    position: "absolute",
+    top: 80,
+    right: 60,
+    bottom: 40,
+    left: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "grey",
+    opacity: 0.9,
   },
 });
 

@@ -16,9 +16,6 @@ const RecipeReducer = (state, action) => {
     case "get_recipe":
 
     case "update_all_recipes":
-      //console.log(state);
-      //console.log(action.payload.recipes);
-      //var newState = state.concat(action.payload.recipes);
       return action.payload.recipes;
 
     case "delete_recipe":
