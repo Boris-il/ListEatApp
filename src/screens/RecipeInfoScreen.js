@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, Component } from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-import { Context as RecipeContext } from "../context/RecipeContext";
+import { Context as RecipeContext } from "../context/Recipe/RecipeContext";
 
 const RecipeInfoScreen = ({ navigation }) => {
   //const recipeId = navigation.getParam("id");

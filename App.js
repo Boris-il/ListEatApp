@@ -14,11 +14,10 @@ import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
-import { Provider as RecipeProvider } from "./src/context/RecipeContext";
+import { Provider as RecipeProvider } from "./src/context/Recipe/RecipeContext";
 import RecipesScreen from "./src/screens/RecipesScreen";
 import ShoppingScreen from "./src/screens/ShoppingScreen";
 import RecipeInfoScreen from "./src/screens/RecipeInfoScreen";
-import TestConnectionScreen from "./src/screens/TestConnectionScreen";
 
 // StackNavigator is an object that decides what to show on the screen at any given time
 const navigator = createStackNavigator(
@@ -27,7 +26,6 @@ const navigator = createStackNavigator(
     Recipes: RecipesScreen,
     Shopping: ShoppingScreen,
     RecipeInfo: RecipeInfoScreen,
-    Test: TestConnectionScreen,
   },
   {
     // initial is the home screen

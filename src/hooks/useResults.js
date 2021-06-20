@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import server from "../api/server";
+import server from "../api/recipesAPI";
 
 export default () => {
   // state for results
