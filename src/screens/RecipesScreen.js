@@ -7,14 +7,17 @@ import {
   Button,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
+  Image,
 } from "react-native";
 import { Overlay } from "react-native-elements";
 import axios from "axios";
-import ActionButton from "react-native-action-button";
+import Clipboard from "expo-clipboard";
 import recAPI from "../api/recipesAPI";
 import { Context as RecipeContext } from "../context/Recipe/RecipeContext";
 import SearchBar from "../components/SearchBar";
 import RecipeDetails from "../components/RecipeDetails";
+import ActionButton from "../components/ActionButton";
 import { VisibilityRounded } from "@material-ui/icons";
 
 const RecipesScreen = ({ navigation }) => {
@@ -29,46 +32,39 @@ const RecipesScreen = ({ navigation }) => {
     useContext(RecipeContext);
   // required for api sync in useEffect
   let isRendered = useRef(false);
-  // loaded
-  const [loaded, setLoaded] = useState(false);
-  // overlay
+  // fetch loading state
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCopyLoading, setIsCopyLoading] = useState(false);
+
+  // overlay visiblity state
   const [visible, setVisible] = useState(false);
+  // clipboard text fetch
+  const [copiedText, setCopiedText] = useState("");
+
+  /*const fetchCopiedText = async () => {
+    setLoaded(false);
+    const text = await Clipboard.getStringAsync();
+    setCopiedText(text);
+    setLoaded(true);
+  };
+  */
+
+  const fetchCopiedText = async () => {
+    setIsCopyLoading(true);
+    const text = await Clipboard.getStringAsync();
+    setCopiedText(text);
+    setIsCopyLoading(false);
+  };
 
   const toggleOverlay = () => {
     setVisible(!visible);
   };
 
-  const done = () => {
-    setLoaded(true);
-    console.log("loaded");
-  };
-
-  const getRecipes = (dispatch) => {
-    return async (userId, callback) => {
-      try {
-        // get recipes from server
-        const response = await recAPI.get(`/get-all/1`).then((response) => {
-          response.data;
-        });
-
-        // update recipes context
-        dispatch({
-          type: "update_all_recipes",
-          payload: { recipes: response },
-        });
-        if (callback) {
-          callback();
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-  };
-
   useEffect(() => {
     isRendered = true;
-    //toggleLoading();
-    getAllRecipes("12", done);
+    getAllRecipes("12", () => {
+      setIsLoading(!isLoading);
+    });
     return () => {
       isRendered = false;
     };
@@ -86,7 +82,7 @@ const RecipesScreen = ({ navigation }) => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <SearchBar
         term={term}
         type="חיפוש מתכון"
@@ -94,8 +90,12 @@ const RecipesScreen = ({ navigation }) => {
         //TODO: Search recipe by user-given name
         onTermSubmit={() => {}}
       />
-      {loaded ? (
-        <View>
+      {isLoading ? (
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      ) : (
+        <View style={{ borderColor: "red", borderWidth: 2, flex: 1 }}>
           <FlatList
             vertical
             showsVerticalScrollIndicator={false}
@@ -114,16 +114,26 @@ const RecipesScreen = ({ navigation }) => {
               );
             }}
           />
-          <Button title="add new recipe" onPress={toggleOverlay} />
+          <ActionButton onPressing={toggleOverlay} />
           <Overlay
             isVisible={visible}
             onBackdropPress={toggleOverlay}
+            animationType="slide"
             overlayStyle={styles.overlay}
           >
-            <Text>sup</Text>
+            <TouchableOpacity onPress={fetchCopiedText}>
+              <Text>Read from clipboard</Text>
+            </TouchableOpacity>
+            {isCopyLoading ? (
+              <View>
+                <ActivityIndicator size="large" color="#0000ff" />
+              </View>
+            ) : (
+              <Text style={styles.copiedText}>{copiedText}</Text>
+            )}
           </Overlay>
         </View>
-      ) : null}
+      )}
     </View>
   );
 };
@@ -133,18 +143,12 @@ const RecipesScreen = ({ navigation }) => {
  */
 
 const styles = StyleSheet.create({
-  titleStyle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginLeft: 15,
-    marginBottom: 5,
-  },
   container: {
-    marginBottom: 10,
+    flex: 1,
+    borderWidth: 2,
+    borderColor: "red",
   },
-  actionButton: {
-    marginBottom: -40,
-  },
+
   overlay: {
     position: "absolute",
     top: 80,
@@ -153,8 +157,11 @@ const styles = StyleSheet.create({
     left: 60,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "grey",
-    opacity: 0.9,
+    backgroundColor: "#f0f5f5",
+    opacity: 0.95,
+  },
+  copiedText: {
+    color: "red",
   },
 });
 

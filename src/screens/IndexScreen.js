@@ -25,12 +25,6 @@ const HomeScreen = (props) => {
           props.navigation.navigate("Shopping");
         }}
       />
-      <Button
-        title="Test Server"
-        onPress={() => {
-          props.navigation.navigate("Test");
-        }}
-      />
     </View>
   );
 };
