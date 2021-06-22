@@ -29,7 +29,27 @@ const RecipeReducer = (state, action) => {
 };
 
 const addRecipe = (dispatch) => {
-  //TODO:
+  return async (url, userId, recipeName, callback) => {
+    try {
+      // logic
+      const response = await recAPI.put('/add', {
+        url: url,
+        userID: userId,
+        name: recipeName
+      }).then((response) => response.data);
+      dispatch({
+        type: "add_recipe"
+        //TODO: dispatch
+      });
+
+      if (callback) {
+        callback();
+      }
+      
+    } catch (err) {
+      console.log(err);
+    }
+  }
 };
 
 const getRecipe = (dispatch) => {

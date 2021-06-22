@@ -6,11 +6,10 @@ import {
   FlatList,
   Button,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
-  Image,
+  ToastAndroid
 } from "react-native";
-import { Overlay } from "react-native-elements";
+import { Overlay, Input } from "react-native-elements";
 import axios from "axios";
 import Clipboard from "expo-clipboard";
 import recAPI from "../api/recipesAPI";
@@ -19,6 +18,7 @@ import SearchBar from "../components/SearchBar";
 import RecipeDetails from "../components/RecipeDetails";
 import ActionButton from "../components/ActionButton";
 import { VisibilityRounded } from "@material-ui/icons";
+import { Entypo } from '@expo/vector-icons'; 
 
 const RecipesScreen = ({ navigation }) => {
   // state for search bar query
@@ -35,11 +35,17 @@ const RecipesScreen = ({ navigation }) => {
   // fetch loading state
   const [isLoading, setIsLoading] = useState(true);
   const [isCopyLoading, setIsCopyLoading] = useState(false);
+  const [isSendLoading, setIsSendLoading] = useState(false);
 
   // overlay visiblity state
   const [visible, setVisible] = useState(false);
   // clipboard text fetch
   const [copiedText, setCopiedText] = useState("");
+  // text state for copied url
+  const [urlText, setUrlText] = useState("")
+
+  // user ID
+  const userId = "1234"
 
   /*const fetchCopiedText = async () => {
     setLoaded(false);
@@ -52,17 +58,20 @@ const RecipesScreen = ({ navigation }) => {
   const fetchCopiedText = async () => {
     setIsCopyLoading(true);
     const text = await Clipboard.getStringAsync();
+    console.log(text);
     setCopiedText(text);
     setIsCopyLoading(false);
+    handleClipboard(text);
   };
 
   const toggleOverlay = () => {
     setVisible(!visible);
+    setUrlText("")
   };
 
   useEffect(() => {
     isRendered = true;
-    getAllRecipes("12", () => {
+    getAllRecipes(`${userId}`, () => {
       setIsLoading(!isLoading);
     });
     return () => {
@@ -76,10 +85,23 @@ const RecipesScreen = ({ navigation }) => {
   }
    */
 
-  const handleAddRecipe = () => {
-    Alert.alert("", "new recipe");
-    //TODO: Open an overlay for recipe url insertion and call addRecipe()
-  };
+  const handleClipboard = (text) => {
+    if (copiedText.length > 0) {
+      // Use text from clipboard
+      setUrlText(text);
+      ToastAndroid.show('הועתק בהצלחה', ToastAndroid.SHORT)
+    } else {
+      // Clipboard is empty
+      ToastAndroid.show('לא נמצא קישור', ToastAndroid.SHORT)
+    }
+  }
+
+  const parseRecipe = () => {
+    setIsSendLoading(true);
+    addRecipe(urlText, userId, "test recipe1");
+    setIsSendLoading(false);
+
+  }
 
   return (
     <View style={styles.container}>
@@ -121,15 +143,29 @@ const RecipesScreen = ({ navigation }) => {
             animationType="slide"
             overlayStyle={styles.overlay}
           >
+            <Input style={{marginTop: 5, textAlign: 'right'}}
+            label='הוספת מתכון חדש'
+            placeholder=' הכנס קישור'
+            placeholderTextColor='#d1d1e0'
+            onChangeText={setUrlText}
+            value={urlText}
+            rightIcon={
+              <Entypo name="link" size={24} color="black" />
+            }
+            />
             <TouchableOpacity onPress={fetchCopiedText}>
-              <Text>Read from clipboard</Text>
+              <Text style={{fontSize: 14}}>הכנס קישור מועתק</Text>
             </TouchableOpacity>
             {isCopyLoading ? (
               <View>
                 <ActivityIndicator size="large" color="#0000ff" />
               </View>
             ) : (
-              <Text style={styles.copiedText}>{copiedText}</Text>
+              <Button
+              title="תן לי"
+        onPress={parseRecipe}
+              />
+              //handleClipboard()
             )}
           </Overlay>
         </View>
@@ -155,7 +191,7 @@ const styles = StyleSheet.create({
     right: 60,
     bottom: 40,
     left: 60,
-    justifyContent: "center",
+    justifyContent: "space-around",
     alignItems: "center",
     backgroundColor: "#f0f5f5",
     opacity: 0.95,
