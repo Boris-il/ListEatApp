@@ -17,7 +17,6 @@ import { Context as RecipeContext } from "../context/Recipe/RecipeContext";
 import SearchBar from "../components/SearchBar";
 import RecipeDetails from "../components/RecipeDetails";
 import ActionButton from "../components/ActionButton";
-import { VisibilityRounded } from "@material-ui/icons";
 import { Entypo } from '@expo/vector-icons'; 
 
 const RecipesScreen = ({ navigation }) => {
@@ -45,7 +44,7 @@ const RecipesScreen = ({ navigation }) => {
   const [urlText, setUrlText] = useState("")
 
   // user ID
-  const userId = "1234"
+  const userId = "3"
 
   /*const fetchCopiedText = async () => {
     setLoaded(false);
@@ -79,11 +78,11 @@ const RecipesScreen = ({ navigation }) => {
     };
   }, []);
 
-  /** 
+  /**
    if (!result) {
     return null;
   }
-   */
+  */
 
   const handleClipboard = (text) => {
     if (copiedText.length > 0) {
@@ -100,7 +99,6 @@ const RecipesScreen = ({ navigation }) => {
     setIsSendLoading(true);
     addRecipe(urlText, userId, "test recipe1");
     setIsSendLoading(false);
-
   }
 
   return (
