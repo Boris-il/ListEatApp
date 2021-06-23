@@ -32,7 +32,8 @@ const RecipeReducer = (state, action) => {
       return action.payload.recipes;
 
     case "delete_recipe":
-    //console.log("deleting recipe id: " + action.payload);
+    // return state without the item
+    return state.filter((recipe) => recipe.id !== action.payload.id);
 
     case "edit_recipe":
 
@@ -90,7 +91,28 @@ const getAllRecipes = (dispatch) => {
 };
 
 const deleteRecipe = (dispatch) => {
-  return (id) => {
+  return async (recipeId, userID) => {
+    console.log(recipeId, userID);
+    try {
+      // delete from server
+      const response = await recAPI
+      .delete(`/delete`, {
+        recipeId : recipeId,
+        userID: userID,
+      })
+      dispatch({
+        type: "delete_recipe",
+        payload: { recipeId: recipeId, userId: userID }
+      });
+      if (callback) {
+        callback();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+
+
     dispatch({ type: "delete_recipe", payload: id });
   };
 };
