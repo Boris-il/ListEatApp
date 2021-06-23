@@ -6,16 +6,18 @@ import {
   FlatList,
   Button,
   TouchableOpacity,
-  Alert,
+  ActivityIndicator,
+  ToastAndroid
 } from "react-native";
-import { Overlay } from "react-native-elements";
+import { Overlay, Input } from "react-native-elements";
 import axios from "axios";
-import ActionButton from "react-native-action-button";
+import Clipboard from "expo-clipboard";
 import recAPI from "../api/recipesAPI";
 import { Context as RecipeContext } from "../context/Recipe/RecipeContext";
 import SearchBar from "../components/SearchBar";
 import RecipeDetails from "../components/RecipeDetails";
-import { VisibilityRounded } from "@material-ui/icons";
+import ActionButton from "../components/ActionButton";
+import { Entypo } from '@expo/vector-icons'; 
 
 const RecipesScreen = ({ navigation }) => {
   // state for search bar query
@@ -29,64 +31,78 @@ const RecipesScreen = ({ navigation }) => {
     useContext(RecipeContext);
   // required for api sync in useEffect
   let isRendered = useRef(false);
-  // loaded
-  const [loaded, setLoaded] = useState(false);
-  // overlay
+  // fetch loading state
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCopyLoading, setIsCopyLoading] = useState(false);
+  const [isSendLoading, setIsSendLoading] = useState(false);
+
+  // overlay visiblity state
   const [visible, setVisible] = useState(false);
+  // clipboard text fetch
+  const [copiedText, setCopiedText] = useState("");
+  // text state for copied url
+  const [urlText, setUrlText] = useState("")
+
+  // user ID
+  const userId = "3"
+
+  /*const fetchCopiedText = async () => {
+    setLoaded(false);
+    const text = await Clipboard.getStringAsync();
+    setCopiedText(text);
+    setLoaded(true);
+  };
+  */
+
+  const fetchCopiedText = async () => {
+    setIsCopyLoading(true);
+    const text = await Clipboard.getStringAsync();
+    console.log(text);
+    setCopiedText(text);
+    setIsCopyLoading(false);
+    handleClipboard(text);
+  };
 
   const toggleOverlay = () => {
     setVisible(!visible);
-  };
-
-  const done = () => {
-    setLoaded(true);
-    console.log("loaded");
-  };
-
-  const getRecipes = (dispatch) => {
-    return async (userId, callback) => {
-      try {
-        // get recipes from server
-        const response = await recAPI.get(`/get-all/1`).then((response) => {
-          response.data;
-        });
-
-        // update recipes context
-        dispatch({
-          type: "update_all_recipes",
-          payload: { recipes: response },
-        });
-        if (callback) {
-          callback();
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
+    setUrlText("")
   };
 
   useEffect(() => {
     isRendered = true;
-    //toggleLoading();
-    getAllRecipes("12", done);
+    getAllRecipes(`${userId}`, () => {
+      setIsLoading(!isLoading);
+    });
     return () => {
       isRendered = false;
     };
   }, []);
 
-  /** 
+  /**
    if (!result) {
     return null;
   }
-   */
+  */
 
-  const handleAddRecipe = () => {
-    Alert.alert("", "new recipe");
-    //TODO: Open an overlay for recipe url insertion and call addRecipe()
-  };
+  const handleClipboard = (text) => {
+    if (copiedText.length > 0) {
+      // Use text from clipboard
+      setUrlText(text);
+      ToastAndroid.show('הועתק בהצלחה', ToastAndroid.SHORT)
+    } else {
+      // Clipboard is empty
+      ToastAndroid.show('לא נמצא קישור', ToastAndroid.SHORT)
+    }
+  }
+
+  const parseRecipe = () => {
+    setIsSendLoading(true);
+    addRecipe(urlText, userId, "test recipe1");
+    setIsSendLoading(false);
+  }
 
   return (
-    <View>
+    <View style={styles.container}>
       <SearchBar
         term={term}
         type="חיפוש מתכון"
@@ -94,8 +110,12 @@ const RecipesScreen = ({ navigation }) => {
         //TODO: Search recipe by user-given name
         onTermSubmit={() => {}}
       />
-      {loaded ? (
-        <View>
+      {isLoading ? (
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      ) : (
+        <View style={{ borderColor: "red", borderWidth: 2, flex: 1 }}>
           <FlatList
             vertical
             showsVerticalScrollIndicator={false}
@@ -114,16 +134,40 @@ const RecipesScreen = ({ navigation }) => {
               );
             }}
           />
-          <Button title="add new recipe" onPress={toggleOverlay} />
+          <ActionButton onPressing={toggleOverlay} />
           <Overlay
             isVisible={visible}
             onBackdropPress={toggleOverlay}
+            animationType="slide"
             overlayStyle={styles.overlay}
           >
-            <Text>sup</Text>
+            <Input style={{marginTop: 5, textAlign: 'right'}}
+            label='הוספת מתכון חדש'
+            placeholder=' הכנס קישור'
+            placeholderTextColor='#d1d1e0'
+            onChangeText={setUrlText}
+            value={urlText}
+            rightIcon={
+              <Entypo name="link" size={24} color="black" />
+            }
+            />
+            <TouchableOpacity onPress={fetchCopiedText}>
+              <Text style={{fontSize: 14}}>הכנס קישור מועתק</Text>
+            </TouchableOpacity>
+            {isCopyLoading ? (
+              <View>
+                <ActivityIndicator size="large" color="#0000ff" />
+              </View>
+            ) : (
+              <Button
+              title="תן לי"
+        onPress={parseRecipe}
+              />
+              //handleClipboard()
+            )}
           </Overlay>
         </View>
-      ) : null}
+      )}
     </View>
   );
 };
@@ -133,28 +177,25 @@ const RecipesScreen = ({ navigation }) => {
  */
 
 const styles = StyleSheet.create({
-  titleStyle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginLeft: 15,
-    marginBottom: 5,
-  },
   container: {
-    marginBottom: 10,
+    flex: 1,
+    borderWidth: 2,
+    borderColor: "red",
   },
-  actionButton: {
-    marginBottom: -40,
-  },
+
   overlay: {
     position: "absolute",
     top: 80,
     right: 60,
     bottom: 40,
     left: 60,
-    justifyContent: "center",
+    justifyContent: "space-around",
     alignItems: "center",
-    backgroundColor: "grey",
-    opacity: 0.9,
+    backgroundColor: "#f0f5f5",
+    opacity: 0.95,
+  },
+  copiedText: {
+    color: "red",
   },
 });
 

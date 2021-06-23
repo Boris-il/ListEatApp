@@ -12,10 +12,23 @@ import createDataContext from "../createDataContext";
 const RecipeReducer = (state, action) => {
   switch (action.type) {
     case "add_recipe":
-
+      return [
+        ...state, action.payload.newRecipe
+      ]
+      
     case "get_recipe":
+      //TODO:
+      /*
+      return state.map((recipe) => {
+        if (recipe.name === action.payload.name) {
+          return
+        }
+      })
+      */
+
 
     case "update_all_recipes":
+      // TODO: objectify each object?
       return action.payload.recipes;
 
     case "delete_recipe":
@@ -29,7 +42,26 @@ const RecipeReducer = (state, action) => {
 };
 
 const addRecipe = (dispatch) => {
-  //TODO:
+  return async (url, userId, recipeName, callback) => {
+    try {
+      const response = await recAPI.put('/add', {
+        url: url,
+        userID: userId,
+        name: recipeName
+      }).then((response) => response.data);
+      dispatch({
+        type: "add_recipe",
+        payload: { newRecipe: response }
+      });
+
+      if (callback) {
+        callback();
+      }
+      
+    } catch (err) {
+      console.log(err);
+    }
+  }
 };
 
 const getRecipe = (dispatch) => {

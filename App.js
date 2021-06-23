@@ -1,15 +1,4 @@
-// old imports
-import HomeScreen from "./src/old/HomeScreen";
-import ComponentsScreen from "./src/old/ComponentsScreen";
-import ListScreen from "./src/old/ListScreen";
-import ImageScreen from "./src/old/ImageScreen";
-import ReducerCounterScreen from "./src/old/ReducerCounterScreen";
-import ColorScreen from "./src/old/ColorScreen";
-import ReducerSquareScreen from "./src/old/ReducerSquareScreen";
-import TextScreen from "./src/old/TextScreen";
-import BoxScreen from "./src/old/BoxScreen";
 import IndexScreen from "./src/screens/IndexScreen";
-// old imports end
 import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { createAppContainer } from "react-navigation";
