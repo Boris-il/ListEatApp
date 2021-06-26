@@ -1,7 +1,5 @@
-import React, { useReducer } from "react";
-import recAPI from "../../api/recipesAPI";
-
-import createDataContext from "../createDataContext";
+import recAPI from '../../api/recipesAPI';
+import createDataContext from '../createDataContext';
 /*
   For each additional type of resource, we will create another Context variable, Provider component and Reducer.
 */
@@ -11,14 +9,12 @@ import createDataContext from "../createDataContext";
 */
 const RecipeReducer = (state, action) => {
   switch (action.type) {
-    case "add_recipe":
-      return [
-        ...state, action.payload.newRecipe
-      ]
-      
-    case "get_recipe":
-      //TODO:
-      /*
+    case 'add_recipe':
+      return [...state, action.payload.newRecipe];
+
+    case 'get_recipe':
+    //TODO:
+    /*
       return state.map((recipe) => {
         if (recipe.name === action.payload.name) {
           return
@@ -26,15 +22,15 @@ const RecipeReducer = (state, action) => {
       })
       */
 
-
-    case "update_all_recipes":
+    case 'update_all_recipes':
       // TODO: objectify each object?
       return action.payload.recipes;
 
-    case "delete_recipe":
-    //console.log("deleting recipe id: " + action.payload);
+    case 'delete_recipe':
+      // return state without the item
+      return state.filter((recipe) => recipe.id !== action.payload.id);
 
-    case "edit_recipe":
+    case 'edit_recipe':
 
     default:
       return state;
@@ -44,24 +40,25 @@ const RecipeReducer = (state, action) => {
 const addRecipe = (dispatch) => {
   return async (url, userId, recipeName, callback) => {
     try {
-      const response = await recAPI.put('/add', {
-        url: url,
-        userID: userId,
-        name: recipeName
-      }).then((response) => response.data);
+      const response = await recAPI
+        .put('/add', {
+          url: url,
+          userID: userId,
+          name: recipeName,
+        })
+        .then((response) => response.data);
       dispatch({
-        type: "add_recipe",
-        payload: { newRecipe: response }
+        type: 'add_recipe',
+        payload: { newRecipe: response },
       });
 
       if (callback) {
         callback();
       }
-      
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 };
 
 const getRecipe = (dispatch) => {
@@ -77,7 +74,7 @@ const getAllRecipes = (dispatch) => {
         .then((response) => response.data);
       // update recipes context
       dispatch({
-        type: "update_all_recipes",
+        type: 'update_all_recipes',
         payload: { recipes: response },
       });
       if (callback) {
@@ -90,33 +87,32 @@ const getAllRecipes = (dispatch) => {
 };
 
 const deleteRecipe = (dispatch) => {
-  return (id) => {
-    dispatch({ type: "delete_recipe", payload: id });
+  return async (recipeId, userID) => {
+    console.log(recipeId, userID);
+    try {
+      // delete from server
+      const response = await recAPI.delete(`/delete`, {
+        recipeId: recipeId,
+        userID: userID,
+      });
+      dispatch({
+        type: 'delete_recipe',
+        payload: { recipeId: recipeId, userId: userID },
+      });
+      if (callback) {
+        callback();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+    dispatch({ type: 'delete_recipe', payload: id });
   };
 };
 
 const editRecipe = (dispatch) => {
   //TODO:
 };
-
-// boilerplate of API CRUD method
-/*
-const addBlogPost = (dispatch) => {
-  return async (title, content, callback) => {
-    try{
-      await axios.post('cawcawawc', title, content);
-    dispatch({
-      type: "add_blogpost",
-      payload: { title: title, content: content },
-    });
-    callback();
-  } catch (e) {
-
-  }
-  };
-};
-
-*/
 
 export const { Context, Provider } = createDataContext(
   RecipeReducer,
