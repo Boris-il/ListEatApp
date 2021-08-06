@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import React from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
 
-import SwipeGesture from "../swipe-gestures/swipe-gesture";
+import SwipeGesture from '../swipe-gestures/swipe-gesture';
 
 // remember: each time we pass props from the father, we need to 'catch' it in the component's param.
 const RecipeDetails = ({ result }) => {
@@ -10,16 +10,15 @@ const RecipeDetails = ({ result }) => {
       <SwipeGesture
         //gestureStyle={styles.container}
         onSwipePerformed={(action) => {
-          if (action === "left") {
-            console.log("left Swipe");
+          if (action === 'left') {
+            console.log('left Swipe');
           }
-        }}
-      >
+        }}>
         <Image style={styles.image} source={{ uri: result.image_url }} />
         <Text style={styles.name}> {result.name} </Text>
         <Text>
-          {" "}
-          Added on: {result.insertion_time}, {result.ingredients.length}{" "}
+          {' '}
+          Added on: {result.insertion_time}, {result.ingredients.length}{' '}
           ingredients
         </Text>
       </SwipeGesture>
@@ -29,7 +28,7 @@ const RecipeDetails = ({ result }) => {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
+    alignItems: 'center',
     marginBottom: 20,
   },
   image: {
@@ -40,7 +39,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });
 

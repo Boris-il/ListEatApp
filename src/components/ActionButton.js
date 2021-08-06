@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     position: 'absolute',
 
-    borderWidth: 2,
+    borderWidth: 0,
     borderColor: 'black',
   },
   addtouchableOpacity: {
