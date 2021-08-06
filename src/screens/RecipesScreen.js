@@ -23,7 +23,7 @@ import RecipeDetails from '../components/RecipeDetails';
 import ActionButton from '../components/ActionButton';
 
 const RecipesScreen = ({ navigation }) => {
-  // state for search bar query
+  // state for search filtering query
   const [term, setTerm] = useState('');
   // state for api call results
   const [result, setResult] = useState(null);
@@ -103,7 +103,7 @@ const RecipesScreen = ({ navigation }) => {
 
   const parseRecipe = () => {
     setIsSendLoading(true);
-    addRecipe(urlText, userId, 'test recipe3');
+    addRecipe(urlText, userId, recipeName);
     setIsSendLoading(false);
     // close overlay
     toggleOverlay();
@@ -111,9 +111,11 @@ const RecipesScreen = ({ navigation }) => {
 
   const showSubmitButton = () => {
     if (urlText.length > 0 && recipeName.length > 0) {
-      return <Button title='תן לי' raised onPress={parseRecipe} />;
+      return <Button title='שמור מתכון' raised onPress={parseRecipe} />;
     } else {
-      return <Button title='תן לי' disabled raised onPress={parseRecipe} />;
+      return (
+        <Button title='שמור מתכון' disabled raised onPress={parseRecipe} />
+      );
     }
   };
 
@@ -142,7 +144,9 @@ const RecipesScreen = ({ navigation }) => {
         }>
         <ListItem.Chevron style={styles.itemChevron} />
         <ListItem.Content style={{ alignItems: 'flex-end' }}>
-          <ListItem.Title style={styles.itemText}>{item.name}</ListItem.Title>
+          <ListItem.Title style={styles.itemText}>
+            {item.recipeName}
+          </ListItem.Title>
           <ListItem.Subtitle>{item.id}</ListItem.Subtitle>
         </ListItem.Content>
         <MaterialIcons name='fastfood' size={26} color='black' />
@@ -156,7 +160,6 @@ const RecipesScreen = ({ navigation }) => {
         term={term}
         type='חיפוש מתכון'
         onTermChange={(newTerm) => setTerm(newTerm)}
-        //TODO: Search recipe by user-given name
         onTermSubmit={() => {}}
       />
       {isLoading ? (
@@ -164,11 +167,13 @@ const RecipesScreen = ({ navigation }) => {
           <ActivityIndicator size='large' color='#0000ff' />
         </View>
       ) : (
-        <View style={{ borderColor: 'red', borderWidth: 2, flex: 1 }}>
+        <View style={{ borderColor: 'red', borderWidth: 0, flex: 1 }}>
           <FlatList
             vertical
             showsVerticalScrollIndicator={false}
-            data={state}
+            data={state.filter((recipe) =>
+              recipe.recipeName.toLowerCase().includes(term.toLowerCase() || '')
+            )}
             keyExtractor={keyExtractor}
             renderItem={renderItem}
           />
@@ -238,7 +243,7 @@ const RecipesScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderWidth: 2,
+    borderWidth: 0,
     borderColor: 'red',
   },
 

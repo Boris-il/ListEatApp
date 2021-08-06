@@ -13,7 +13,6 @@ const RecipeReducer = (state, action) => {
       return [...state, action.payload.newRecipe];
 
     case 'get_recipe':
-    //TODO:
     /*
       return state.map((recipe) => {
         if (recipe.name === action.payload.name) {
@@ -61,8 +60,14 @@ const addRecipe = (dispatch) => {
   };
 };
 
-const getRecipe = (dispatch) => {
-  //TODO:
+const getRecipe = (recipeId) => {
+  /*
+  return state.map((recipe) => {
+    if (recipe.id === recipeId) {
+      console.log(recipe);
+    }
+  });
+  */
 };
 
 const getAllRecipes = (dispatch) => {
@@ -87,17 +92,15 @@ const getAllRecipes = (dispatch) => {
 };
 
 const deleteRecipe = (dispatch) => {
-  return async (recipeId, userID) => {
-    console.log(recipeId, userID);
+  return async (recipeId, userID, callback) => {
     try {
       // delete from server
       const response = await recAPI.delete(`/delete`, {
-        recipeId: recipeId,
-        userID: userID,
+        data: { recipeID: recipeId, userID: userID },
       });
       dispatch({
         type: 'delete_recipe',
-        payload: { recipeId: recipeId, userId: userID },
+        payload: { recipeId: recipeId },
       });
       if (callback) {
         callback();
@@ -105,8 +108,6 @@ const deleteRecipe = (dispatch) => {
     } catch (err) {
       console.log(err);
     }
-
-    dispatch({ type: 'delete_recipe', payload: id });
   };
 };
 

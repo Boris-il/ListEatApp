@@ -1,12 +1,13 @@
-import IndexScreen from "./src/screens/IndexScreen";
-import React from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { createAppContainer } from "react-navigation";
-import { createStackNavigator } from "react-navigation-stack";
-import { Provider as RecipeProvider } from "./src/context/Recipe/RecipeContext";
-import RecipesScreen from "./src/screens/RecipesScreen";
-import ShoppingScreen from "./src/screens/ShoppingScreen";
-import RecipeInfoScreen from "./src/screens/RecipeInfoScreen";
+import IndexScreen from './src/screens/IndexScreen';
+import React from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { Provider as RecipeProvider } from './src/context/Recipe/RecipeContext';
+import { Provider as IngredientsProvider } from './src/context/Ingredients/IngredientsContext';
+import RecipesScreen from './src/screens/RecipesScreen';
+import ShoppingScreen from './src/screens/ShoppingScreen';
+import RecipeInfoScreen from './src/screens/RecipeInfoScreen';
 
 // StackNavigator is an object that decides what to show on the screen at any given time
 const navigator = createStackNavigator(
@@ -18,9 +19,9 @@ const navigator = createStackNavigator(
   },
   {
     // initial is the home screen
-    initialRouteName: "Index",
+    initialRouteName: 'Index',
     defaultNavigationOptions: {
-      title: "ListEat",
+      title: 'ListEat',
     },
   }
 );
@@ -30,9 +31,11 @@ const App = createAppContainer(navigator);
 export default () => {
   return (
     <SafeAreaProvider>
-      <RecipeProvider>
-        <App />
-      </RecipeProvider>
+      <IngredientsProvider>
+        <RecipeProvider>
+          <App />
+        </RecipeProvider>
+      </IngredientsProvider>
     </SafeAreaProvider>
   );
 };
