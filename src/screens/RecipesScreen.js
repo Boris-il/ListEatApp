@@ -49,7 +49,7 @@ const RecipesScreen = ({ navigation }) => {
   const [recipeName, setRecipeName] = useState('');
 
   // user ID
-  const userId = '3';
+  const userId = '1';
 
   /*const fetchCopiedText = async () => {
     setLoaded(false);
@@ -119,15 +119,27 @@ const RecipesScreen = ({ navigation }) => {
     }
   };
 
+  const convertDateFromEpoch = (date) => {
+    var myDate = new Date(date);
+    var local = myDate.toLocaleDateString();
+    var temp = local.split('/');
+    local = temp[1].concat('/', temp[0]);
+    local = local.concat('/', temp[2]);
+    return local;
+  };
+
   const keyExtractor = (recipe, index) => index.toString();
 
   const renderItem = ({ item }) => {
     return (
       <ListItem.Swipeable
+        bottomDivider
         leftContent={
           <Button
             title='פתח'
-            onPress={() => navigation.navigate('RecipeInfo', { id: item.id })}
+            onPress={() =>
+              navigation.navigate('RecipeInfo', { id: item.recipe.id })
+            }
             icon={<Foundation name='info' size={36} color='white' />}
             buttonStyle={{ minHeight: '100%' }}
             titleStyle={{ marginHorizontal: 6, fontSize: 17 }}
@@ -136,7 +148,7 @@ const RecipesScreen = ({ navigation }) => {
         rightContent={
           <Button
             title='מחק'
-            onPress={() => deleteRecipe(item.id, userId)}
+            onPress={() => deleteRecipe(item.recipe.id, userId)}
             icon={<FontAwesome5 name='trash' size={24} color='white' />}
             buttonStyle={{ minHeight: '100%', backgroundColor: 'red' }}
             titleStyle={{ marginHorizontal: 6, fontSize: 17 }}
@@ -147,7 +159,16 @@ const RecipesScreen = ({ navigation }) => {
           <ListItem.Title style={styles.itemText}>
             {item.recipeName}
           </ListItem.Title>
-          <ListItem.Subtitle>{item.id}</ListItem.Subtitle>
+          <ListItem.Subtitle style={{ fontSize: 16 }}>
+            {item.recipe.ingredients.length}
+            <Text> </Text>
+            <Text>מרכיבים</Text>
+            <Text>,</Text>
+            <Text> </Text>
+            <Text>נוסף בתאריך:</Text>
+            <Text> </Text>
+            {convertDateFromEpoch(item.recipe.insertionTime)}
+          </ListItem.Subtitle>
         </ListItem.Content>
         <MaterialIcons name='fastfood' size={26} color='black' />
       </ListItem.Swipeable>
@@ -177,6 +198,7 @@ const RecipesScreen = ({ navigation }) => {
             keyExtractor={keyExtractor}
             renderItem={renderItem}
           />
+
           <ActionButton onPressing={toggleOverlay} />
           <Overlay
             isVisible={visible}
@@ -261,7 +283,7 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   itemText: {
-    fontSize: 17,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   itemChevron: {

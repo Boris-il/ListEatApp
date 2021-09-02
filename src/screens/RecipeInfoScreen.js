@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { ListItem, Icon } from 'react-native-elements';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Context as RecipeContext } from '../context/Recipe/RecipeContext';
+import RecipeDetails from '../components/RecipeDetails';
 
 const RecipeInfoScreen = ({ navigation }) => {
   //const recipeId = navigation.getParam("id");
   // use the recipe context
-  const { state, deleteRecipe } = useContext(RecipeContext);
+  const { state } = useContext(RecipeContext);
   // expand item state
 
   const recipe = state.find(
-    (recipe) => recipe.id === navigation.getParam('id')
+    (recipe) => recipe.recipe.id === navigation.getParam('id')
   );
 
-  return <View>{console.log(recipe.ingredients)}</View>;
+  return <RecipeDetails displayRecipe={recipe} />;
 };
 
 /*

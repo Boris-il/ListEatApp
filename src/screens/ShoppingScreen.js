@@ -23,29 +23,55 @@ const ShoppingScreen = () => {
     useContext(IngredientsContext);
   //const { state, addRecipe, getRecipe, getAllRecipes, deleteRecipe } =
   //  useContext(RecipeContext);
-
-  const [expanded, setExpended] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  //const [expandState, setExpandState] = useState([]);
   // required for api sync in useEffect
   let isRendered = useRef(false);
   // fetch loading state
   const [isLoading, setIsLoading] = useState(true);
 
-  // user ID
-  const userId = '3';
+  // user IDz
+  const userId = '123';
 
   useEffect(() => {
     isRendered = true;
     getAllIngredients(`${userId}`, () => {
       setIsLoading(!isLoading);
+      //initState();
     });
     return () => {
       isRendered = false;
     };
   }, []);
 
-  const test = (ingredientId) => {
-    console.log('trying to delete:' + ingredientId);
-  };
+  // const initState = () => {
+  //   let newState = [];
+  //   state.map((item) => {
+  //     let obj = { id: item.id, status: false };
+  //     newState = [...newState, obj];
+  //   });
+  //   setExpandState(newState);
+  // };
+
+  // const getItem = (item_id) => {
+  //   expandState.map((row) => {
+  //     if (item_id === row.id) {
+  //       console.log('pressed on: ', row.id, 'status is: ', row.status);
+  //       let obj = { id: item_id, status: !row.status };
+  //       let newState = [...newState, obj];
+  //       return newState;
+  //     }
+  //   });
+  // };
+
+  // const checkExpended = (item_id) => {
+  //   expandState.map((row) => {
+  //     if (item_id === row.id) {
+  //       console.log(row.id);
+  //       return row.status;
+  //     }
+  //   });
+  // };
 
   const keyExtractor = (recipe, index) => index.toString();
 
@@ -65,10 +91,13 @@ const ShoppingScreen = () => {
             </ListItem.Content>
             <ListItem.Content style={{ alignItems: 'flex-end' }}>
               <View style={{ marginRight: 10 }}>
-                <ListItem.Title style={styles.itemText}>
+                <ListItem.Title
+                  style={styles.itemText}
+                  numberOfLines={2}
+                  textBreakStrategy='simple'>
                   {item.ingredient.name}
                 </ListItem.Title>
-                <ListItem.Subtitle style={{ marginRight: 4 }}>
+                <ListItem.Subtitle>
                   {item.ingredient.amount} {item.ingredient.measurement}
                 </ListItem.Subtitle>
               </View>
@@ -79,12 +108,10 @@ const ShoppingScreen = () => {
         }
         noIcon
         bottomDivider
-        isExpanded={expanded}
-        //onLongPress={deleteIngredient(item.id, userId)}
-        /*onPress={() => {
-          setExpanded(!expanded);
-        }}
-        */
+        //isExpanded={checkExpended}
+        // onPress={() => {
+        //   getItem(item.id);
+        // }}
       >
         <Text>expanded</Text>
       </ListItem.Accordion>
@@ -97,7 +124,6 @@ const ShoppingScreen = () => {
         term={term}
         type='חיפוש מרכיבים'
         onTermChange={(newTerm) => setTerm(newTerm)}
-        onTermSubmit={() => {}}
       />
       {isLoading ? (
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -124,6 +150,10 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   itemText: {
+    marginLeft: -50,
+    textAlign: 'right',
+    borderColor: 'red',
+    borderWidth: 1,
     fontSize: 17,
     fontWeight: 'bold',
   },

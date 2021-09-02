@@ -1,5 +1,15 @@
-import React from "react";
-import { Text, StyleSheet, View, Button, TouchableOpacity } from "react-native";
+import { Navigation } from '@material-ui/icons';
+import React from 'react';
+import {
+  Text,
+  StyleSheet,
+  View,
+  Image,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
+import RecipesImage from '../../assets/recipes.jpg';
+import IngredientsImage from '../../assets/shopping.jpg';
 
 /* button can contain only text while TouchableOpacity can store any element.
   the button is a little less powerful and has little configurations available.
@@ -10,19 +20,50 @@ import { Text, StyleSheet, View, Button, TouchableOpacity } from "react-native";
   if that data changes, our app will 'rerender'
 */
 const HomeScreen = (props) => {
+  const resolveImage = (img) => {
+    return Image.resolveAssetSource(img).uri;
+  };
+
+  menuOptions = [
+    {
+      section: 'recipes',
+      name: 'המתכונים שלי',
+      screen: 'Recipes',
+      img: RecipesImage,
+    },
+    {
+      section: 'shopping',
+      name: 'רשימת הקניות שלי',
+      screen: 'Ingredients',
+      img: IngredientsImage,
+    },
+  ];
+
   return (
-    <View>
-      <Text style={styles.text}>Home Screen</Text>
-      <Button
-        title="My Recipes"
-        onPress={() => {
-          props.navigation.navigate("Recipes");
-        }}
-      />
-      <Button
-        title="Shopping List"
-        onPress={() => {
-          props.navigation.navigate("Shopping");
+    <View style={styles.container}>
+      <FlatList
+        contentContainerStyle={styles.listView}
+        vertical
+        showsHorizontalScrollIndicator={false}
+        data={menuOptions}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => {
+          return (
+            <View style={{ alignItems: 'center', marginTop: 30 }}>
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate(item.screen);
+                }}>
+                <View style={styles.container2}>
+                  <Image
+                    style={styles.image}
+                    source={{ uri: resolveImage(item.img) }}
+                  />
+                  <Text style={styles.name}> {item.name}</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          );
         }}
       />
     </View>
@@ -32,6 +73,25 @@ const HomeScreen = (props) => {
 const styles = StyleSheet.create({
   text: {
     fontSize: 30,
+  },
+
+  listView: {},
+
+  container: {
+    marginBottom: 10,
+  },
+
+  image: {
+    width: 300,
+    height: 200,
+    borderRadius: 6,
+    marginBottom: 5,
+  },
+
+  name: {
+    textAlign: 'center',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
 

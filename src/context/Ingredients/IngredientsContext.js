@@ -7,36 +7,72 @@ const IngredientsReducer = (state, action) => {
       return [...state, action.payload.newIngredient];
 
     case 'delete_ingredient':
-      return state.filter((ingr) => ingr.id !== action.payload.id);
+      // return state without the item
+      return state.filter(
+        (ingredient) => ingredient.id !== action.payload.ingredientId
+      );
 
     case 'update_all_ingredients':
       return action.payload.ingredients;
 
-    case 'delete_recipe':
-    //TODO:
+    case 'edit_ingredient': {
+      newState = state.map((item) => {
+        if (item.id === action.payload.ingredientId) {
+          return {
+            ...item,
+            ingredient: {
+              ...item.ingredient,
+              amount: action.payload.newAmount,
+              measurement: action.payload.newMeasurement,
+            },
+          };
+        } else {
+          return item;
+        }
+      });
+      return newState;
+    }
 
-    case 'edit_ingredient':
-    //TODO:
+    case 'init_expanded': {
+      let newState = [...state];
+      newState = newState.map((ingredient) => {
+        return {
+          ...ingredient,
+          expanded: 'false',
+        };
+      });
+      return newState;
+    }
 
     default:
       return state;
   }
 };
 
-const addIngredient = (dispatch) => {
-  return async (ingredient, userId, callback) => {
-    try {
-      const response = await ingrAPI
-        .put('/add', {
-          Ingredient: ingredient,
-          UserID: userId,
-        })
-        .then((response) => response.data);
-      dispatch({
-        type: 'add_ingredient',
-        payload: { newIngredient: response },
-      });
+const initExpanded = (dispatch) => {
+  return async () => {
+    dispatch({
+      type: 'init_expanded',
+    });
+  };
+};
 
+const editIngredient = (dispatch) => {
+  return async (ingredientId, userId, newAmount, newMeasurement, callback) => {
+    if (newAmount === '') {
+      return;
+    }
+    dispatch({
+      type: 'edit_ingredient',
+      payload: { ingredientId, userId, newAmount, newMeasurement },
+    });
+    try {
+      const response = await ingrAPI.post(`/change-amount`, {
+        user_id: userId,
+        ingredient_id: ingredientId,
+        new_amount: newAmount,
+        new_measurement: newMeasurement,
+      });
       if (callback) {
         callback();
       }
@@ -60,7 +96,7 @@ const deleteIngredient = (dispatch) => {
         });
       dispatch({
         type: 'delete_ingredient',
-        payload: { ingredient: ingredientId },
+        payload: { ingredientId: ingredientId },
       });
       if (callback) {
         callback();
@@ -92,6 +128,11 @@ const getAllIngredients = (dispatch) => {
 
 export const { Context, Provider } = createDataContext(
   IngredientsReducer,
-  { addIngredient, getAllIngredients, deleteIngredient },
+  {
+    initExpanded,
+    getAllIngredients,
+    deleteIngredient,
+    editIngredient,
+  },
   []
 );

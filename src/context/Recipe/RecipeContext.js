@@ -12,22 +12,15 @@ const RecipeReducer = (state, action) => {
     case 'add_recipe':
       return [...state, action.payload.newRecipe];
 
-    case 'get_recipe':
-    /*
-      return state.map((recipe) => {
-        if (recipe.name === action.payload.name) {
-          return
-        }
-      })
-      */
-
     case 'update_all_recipes':
       // TODO: objectify each object?
       return action.payload.recipes;
 
     case 'delete_recipe':
       // return state without the item
-      return state.filter((recipe) => recipe.id !== action.payload.id);
+      return state.filter(
+        ({ recipe }) => recipe.id !== action.payload.recipeId
+      );
 
     case 'edit_recipe':
 
@@ -95,9 +88,16 @@ const deleteRecipe = (dispatch) => {
   return async (recipeId, userID, callback) => {
     try {
       // delete from server
-      const response = await recAPI.delete(`/delete`, {
-        data: { recipeID: recipeId, userID: userID },
-      });
+      const response = await recAPI
+        .delete(`/delete`, {
+          data: { recipeID: recipeId, userID: userID },
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log(error.response.status);
+          }
+        });
+      // delete from state
       dispatch({
         type: 'delete_recipe',
         payload: { recipeId: recipeId },

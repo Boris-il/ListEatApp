@@ -1,12 +1,12 @@
-import React from "react";
-import { View, TextInput, StyleSheet } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import React from 'react';
+import { View, TextInput, StyleSheet } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 
 const SearchBar = ({ term, type, onTermChange, onTermSubmit }) => {
   return (
     <View style={styles.backgroundStyle}>
       <TextInput
-        autoCapitalize="none"
+        autoCapitalize='none'
         autoCorrect={false}
         style={styles.inputStyle}
         placeholder={type}
@@ -14,30 +14,30 @@ const SearchBar = ({ term, type, onTermChange, onTermSubmit }) => {
         onChangeText={(newTerm) => onTermChange(newTerm)}
         onEndEditing={() => onTermSubmit()}
       />
-      <Feather name="search" style={styles.iconStyle} />
+      <Feather name='search' style={styles.iconStyle} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   backgroundStyle: {
-    backgroundColor: "#DEDEDE",
+    backgroundColor: '#DEDEDE',
     marginTop: 10,
     height: 50,
     borderRadius: 6, // curvy borders
     marginHorizontal: 15,
-    flexDirection: "row",
+    flexDirection: 'row',
     marginBottom: 10,
   },
   inputStyle: {
     flex: 1,
     // default font size is 14
     fontSize: 18,
-    textAlign: "right",
+    textAlign: 'right',
   },
   iconStyle: {
     fontSize: 32,
-    alignSelf: "center",
+    alignSelf: 'center',
     marginHorizontal: 7,
   },
 });
