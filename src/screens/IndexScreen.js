@@ -49,7 +49,11 @@ const HomeScreen = (props) => {
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => {
           return (
-            <View style={{ alignItems: 'center', marginTop: 30 }}>
+            <View
+              style={{
+                alignItems: 'center',
+                marginTop: 50,
+              }}>
               <TouchableOpacity
                 onPress={() => {
                   props.navigation.navigate(item.screen);
@@ -75,11 +79,9 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
 
-  listView: {},
+  container: { marginTop: 15 },
 
-  container: {
-    marginBottom: 10,
-  },
+  container2: { marginTop: -10 },
 
   image: {
     width: 300,
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
 
   name: {
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });

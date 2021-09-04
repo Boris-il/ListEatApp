@@ -30,7 +30,7 @@ const RecipesScreen = ({ navigation }) => {
   // state for api call error message
   const [errorMessage, setErrorMessage] = useState('');
   // global context
-  const { state, addRecipe, getRecipe, getAllRecipes, deleteRecipe } =
+  const { state, addRecipe, getAllRecipes, deleteRecipe } =
     useContext(RecipeContext);
   // required for api sync in useEffect
   let isRendered = useRef(false);

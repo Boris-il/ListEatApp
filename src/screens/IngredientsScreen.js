@@ -68,12 +68,12 @@ const IngredientsScreen = () => {
     if (newAmount >= 0) {
       editIngredient(id, userId, newAmount, measurement);
     } else {
-      ToastAndroid.show("Can't Set Negative Amount!", ToastAndroid.BOTTOM);
+      ToastAndroid.show('אנא בחר כמות חיובית', ToastAndroid.BOTTOM);
     }
   };
 
   const formatAmount = (num) => {
-    return num.toFixed(1);
+    return parseFloat(num).toFixed(1);
   };
 
   const renderItem = ({ item }) => {
@@ -81,7 +81,11 @@ const IngredientsScreen = () => {
       <View style={{ flex: 1 }}>
         <Divider />
         <List.Accordion
-          titleStyle={{ alignSelf: 'flex-end', flexWrap: 'wrap' }}
+          titleStyle={{
+            alignSelf: 'flex-end',
+            flexWrap: 'wrap',
+            fontSize: 17,
+          }}
           title={item.ingredient.name}
           descriptionStyle={{ alignSelf: 'flex-end' }}
           description={
@@ -158,14 +162,14 @@ const IngredientsScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, borderWidth: 1, borderColor: 'red' }}>
+    <View style={{ flex: 1 }}>
       <SearchBar
         term={term}
         type='חיפוש מרכיבים'
         onTermChange={(newTerm) => setTerm(newTerm)}
         onTermSubmit={() => {}}
       />
-      <View style={{ borderWidth: 1, borderColor: 'red' }}>
+      <View>
         {isLoading ? (
           <ActivityIndicator
             style={{ marginVertical: 10 }}

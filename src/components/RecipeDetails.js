@@ -7,11 +7,11 @@ import NutritionTable from './NutritionTable';
 const RecipeDetails = ({ displayRecipe }) => {
   const imgSrc = displayRecipe.recipe.imageUrl;
   const valuesObj = displayRecipe.recipe.nutritionValues;
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text>Hey</Text>
-      <Image style={styles.image} source={{ uri: imgSrc }} />
+      {{ uri: imgSrc } ? (
+        <Image style={styles.image} source={{ uri: imgSrc }} />
+      ) : null}
       <NutritionTable values={valuesObj} />
     </ScrollView>
   );
